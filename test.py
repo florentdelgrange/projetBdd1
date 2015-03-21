@@ -22,3 +22,4 @@ with con:
     print #retour a la ligne
 
 print(split_str("michel ma belle sont des mots qui vont tres bien ensembles"))
+print(checkIn(['a','b','c'], ['x','b','v','d','a','g','c','s']))
