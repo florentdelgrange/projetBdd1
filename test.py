@@ -27,7 +27,8 @@ def get_logical_consequence(triplet_list):
         sigma = triplet_list
         for i in range(len(sigma)):
             functional_dependence = sigma[i][1]
-            implication = sigma[i][2]
+            implication = [sigma[i][2]]
+            last_call = ''
             owned = split_str(sigma[i][1])+[sigma[i][2]]
             to_recheck = sigma
             added = True
@@ -41,19 +42,27 @@ def get_logical_consequence(triplet_list):
                         if not included_in(list,owned):
                             print list,
                             print "is not included in",
-                            print owned,
+                            print owned
                             checklist.append(to_recheck[j])
-                            print "so this is checklist :",
-                            print checklist
                         else:
-                            if(to_recheck[j][2] not in owned):
-                                implication = to_recheck[j][2]
-                                owned.append(implication)
+                            print list,
+                            print "is included in",
+                            print owned,
+                            if to_recheck[j][2] not in owned:
+                                if to_recheck[j][1] == last_call:
+                                    print to_recheck[j][1],
+                                    print 'is already known'
+                                    implication.append(to_recheck[j][2])
+                                else:
+                                    implication = [to_recheck[j][2]]
+                                owned.append(to_recheck[j][2])
                                 found = True
+                                last_call = to_recheck[j][1]
                             for k in list:
                                 if k not in owned:
                                     owned.append(k)
                                     print k + "is added to owned",
+                            print '\n'
                             print functional_dependence + "->",
                             print owned
                             added = True
@@ -62,11 +71,22 @@ def get_logical_consequence(triplet_list):
                             to_recheck=checklist
                             print "to recheck :",
                             print checklist
+                            print
                             break
-            if found:
-                triplets.append((sigma[i][0], functional_dependence, implication))
-        print
+            for attribute in implication :
+                if found and not is_useless(sigma,(sigma[i][0], functional_dependence, attribute)):
+                    triplets.append((sigma[i][0], functional_dependence, attribute))
+                if is_useless(sigma,(sigma[i][0], functional_dependence, attribute)):
+                    print (sigma[i][0], functional_dependence, i),
+                    print "is useless"
+            print
         return triplets
+
+def is_useless(functional_dependencies,triplet):
+        for df in functional_dependencies:
+            if triplet[0] == df[0] and triplet[2] == df[2] and included_in(split_str(df[1]),split_str(triplet[1])):
+                return True
+        return False
 
 print(split_str("michel ma belle sont des mots qui vont tres bien ensembles"))
 print(included_in(['a','b','c'], ['x','b','v','d','a','g','c','s']))
