@@ -21,5 +21,56 @@ with con:
          print raw[1],
     print #retour a la ligne
 
+#Test de la methode pour checker les consequences logiques
+def get_logical_consequence(triplet_list):
+        triplets = []
+        sigma = triplet_list
+        for i in range(len(sigma)):
+            functional_dependence = sigma[i][1]
+            implication = sigma[i][2]
+            owned = split_str(sigma[i][1])+[sigma[i][2]]
+            to_recheck = sigma
+            added = True
+            found = False
+            while added:
+                added = False
+                checklist = []
+                for j in range(len(to_recheck)):
+                    if to_recheck[j][0] == sigma[i][0]:
+                        list = split_str(to_recheck[j][1])
+                        if not included_in(list,owned):
+                            print list,
+                            print "is not included in",
+                            print owned,
+                            checklist.append(to_recheck[j])
+                            print "so this is checklist :",
+                            print checklist
+                        else:
+                            if(to_recheck[j][2] not in owned):
+                                implication = to_recheck[j][2]
+                                owned.append(implication)
+                                found = True
+                            for k in list:
+                                if k not in owned:
+                                    owned.append(k)
+                                    print k + "is added to owned",
+                            print functional_dependence + "->",
+                            print owned
+                            added = True
+                            if j+1 < len(to_recheck):
+                                checklist += to_recheck[j+1:]
+                            to_recheck=checklist
+                            print "to recheck :",
+                            print checklist
+                            break
+            if found:
+                triplets.append((sigma[i][0], functional_dependence, implication))
+        print
+        return triplets
+
 print(split_str("michel ma belle sont des mots qui vont tres bien ensembles"))
-print(checkIn(['a','b','c'], ['x','b','v','d','a','g','c','s']))
+print(included_in(['a','b','c'], ['x','b','v','d','a','g','c','s']))
+print "\n \n"
+print get_logical_consequence([("table1","A B","C"),("table2","michel","mabelle"),("table1","C D", "E"), ("table1", "B","D")])
+print '\n \n'
+print get_logical_consequence([("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")])
