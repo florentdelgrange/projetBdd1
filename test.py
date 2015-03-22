@@ -17,8 +17,10 @@ with con:
             print 'vrai'
         print raw[0]
     print line
+    list=[]
     for raw in cur.execute("PRAGMA table_info(Cars)"):
-         print raw[1],
+         list.append(raw[1])
+    print list
     print #retour a la ligne
 
 #Test de la methode pour checker les consequences logiques

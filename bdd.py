@@ -8,9 +8,18 @@ class Bdd(object):
     def funcDep(self):
         return self.funcDep
 
-    def addDep(self, triplet):
+    def add_dep(self, triplet):
         if(self.detection(triplet)):
             self.funcDep.append(triplet)
+
+    def get_attributes(self,table):
+        cur = self.conn.cursor()
+        list=[]
+        with cur:
+            for raw in cur.execute("PRAGMA table_info("+table+")"):
+                list.append(raw[1])
+        self.conn.close()
+        return list
 
     def detection(self, triplet):
         cur = self.conn.cursor()
@@ -29,7 +38,9 @@ class Bdd(object):
             list.append(triplet[2])
             for raw in cur.execute("PRAGMA table_info("+triplet[0]+")"):
                 if raw[1] not in list :
+                    self.conn.close()
                     return False
+        self.conn.close()
         return True
 
     def get_logical_consequence(self):
@@ -37,13 +48,14 @@ class Bdd(object):
         sigma = self.funcDep()
         for i in range(len(sigma)):
             functional_dependence = sigma[i][1]
+            #Pourquoi implication est une liste ? Cas ou la consequence logique implique 2 attributs ou plus ; c'est la raison de la presence de la variable "last_call"
             implication = [sigma[i][2]]
             last_call = ''
             owned = split_str(sigma[i][1])+[sigma[i][2]]
             to_recheck = sigma
             added = True
             found = False
-            while added:
+            while added: #tant qu'une df a ete ajoutee a l'etape precendente
                 added = False
                 checklist = []
                 for j in range(len(to_recheck)):
