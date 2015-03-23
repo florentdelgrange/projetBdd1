@@ -1,7 +1,7 @@
 from bdd import *
 
+#Determine si des attributs ne sont jamais a droite d'une fleche
 def not_involved(table, functional_dependencies, attributes):
-    #Determine si des attributs ne sont jamais a droite d'une fleche
     isolated_attributes = []
     sigma = functional_dependencies
     for df in sigma :
@@ -10,9 +10,9 @@ def not_involved(table, functional_dependencies, attributes):
     isolated_attributes = complementary(isolated_attributes, attributes)
     return isolated_attributes
 
+#retourne l'ensemble d'attributs A implique par l'ensemble d'attribut X tq
+#sigma satisfait X->A
 def find_consequence(attributes,functional_dependencies):
-    #retourne l'ensemble d'attributs A implique par l'ensemble d'attribut X tq
-    #sigma satisfait X->A
     found = True
     owned = attributes[:]
     to_check = functional_dependencies[:]
@@ -33,7 +33,8 @@ def find_consequence(attributes,functional_dependencies):
     else:
         return []
 
-def find_super_key(table,attributes,functional_dependencies):
+#trouve toutes les super cles de la table entree en parametre
+def find_super_key(table, attributes, functional_dependencies):
     super_key = []
     combinations = partiesliste(attributes)
     sigma = []
@@ -44,6 +45,20 @@ def find_super_key(table,attributes,functional_dependencies):
         if equals(attributes,find_consequence(comb,sigma)+comb):
             super_key.append(comb)
     return filter(super_key)
+
+#trouve toutes les cles de la table entree en parametre
+def find_key(table, attributes, functional_dependencies):
+    keys = []
+    super_keys_list = find_super_key(table, attributes, functional_dependencies)
+    for super_key in super_keys_list:
+        boolean = True
+        for test_key in super_keys_list:
+            if super_key != test_key and included_in(test_key, super_key):
+                boolean = False
+                break
+        if(boolean):
+            keys.append(super_key)
+    return keys
 
 #http://python.jpvweb.com/mesrecettespython/doku.php?id=parties_ensemble
 def partiesliste(seq):
@@ -100,6 +115,6 @@ def complementary(list1, list2):
 
 print not_involved("t", [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")], ["A","B","C","D","E","F","G","H"])
 print find_consequence(["B"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")])
-print partiesliste(['A', 'B', 'C', 'D'])
-print partiesliste(["A","B","C","D","E","F","G","H"])
 print find_super_key("t", ["A","B","C","D","E","F","G","H"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")])
+print find_key("t", ["A","B","C","D","E","F","G","H"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")])
+print find_key('t', ['A','B','C', 'D', 'E', 'F'], [('t', 'C D', 'B'), ('t','A','E'), ('t', 'E F', 'A'), ('t', 'C','D'), ('t', 'A B E', 'F'), ('t', 'A B E', 'C'), ('t', 'A B', 'C'), ('t', 'A E', 'F')])
