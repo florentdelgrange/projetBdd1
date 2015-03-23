@@ -33,77 +33,37 @@ def find_consequence(attributes,functional_dependencies):
     else:
         return []
 
-def find_key(table, functional_dependencies, attributes):
-    isolated_attributes = not_involved(table,functional_dependencies,attributes)
-    rest = []
-    for i in complementary(find_consequence(isolated_attributes, functional_dependencies), attributes):
-        rest.append([i])
-    if len(rest)-len(isolated_attributes) == 0:
-        return [isolated_attributes]
-    else:
-        key = []
-        prohibited_list = isolated_attributes[:]
-        found = True
-        iterations = 0
-        while found or iterations < 2:
-            iterations += 1
-            #print "prohibited list : ",
-            #print prohibited_list
-            #print "rest : ",
-            #print rest
-            found = False
-            for attribute_list in rest:
-                boolean = True
-                for i in attribute_list:
-                    if i in prohibited_list:
-                        #print i + " is in prohibited list, so rest = ",
-                        boolean = False
-                        rest.remove(attribute_list)
-                        #print rest
-                        break
-                if boolean:
-                    x = isolated_attributes[:]
-                    for i in attribute_list:
-                        x.append(i)
-                    if included_in(attributes, find_consequence(x, functional_dependencies)+x):
-                        found = True
-                        iterations = 0
-                        #print "key found :",
-                        #print x,
-                        #print " -> ",
-                        #print find_consequence(x, functional_dependencies)
-                        key.append(x)
-                        prohibited_list = union(prohibited_list,x)
-            if not found:
-                rest = part(rest)
-                #print "nothing found... new rest : ",
-                #print rest
-        return key
+def find_super_key(table,attributes,functional_dependencies):
+    super_key = []
+    combinations = partiesliste(attributes)
+    sigma = []
+    for triplet in functional_dependencies:
+        if triplet[0] == table:
+            sigma.append(triplet)
+    for comb in combinations:
+        if equals(attributes,find_consequence(comb,sigma)+comb):
+            super_key.append(comb)
+    return filter(super_key)
 
-def comb(list, order):
-    if len(list) < order :
-        return []
-    elif order == 1:
-        new_list = []
-        for elt in list:
-            new_list.append([elt])
-        return new_list
-    else:
-        new_list = []
-        for i in range(1,order):
-            for j in range(len(list)):
-                if j < len(list):
-                    sub_list = list[:j]+list[j+1:]
-                else:
-                    sub_list = list[:j]
-                for elt in comb(sub_list, i):
-                    new_list.append([list[j]]+elt)
-        return new_list
+#http://python.jpvweb.com/mesrecettespython/doku.php?id=parties_ensemble
+def partiesliste(seq):
+    p = []
+    i, imax = 0, 2**len(seq)-1
+    while i <= imax:
+        s = []
+        j, jmax = 0, len(seq)-1
+        while j <= jmax:
+            if (i>>j)&1 == 1:
+                s.append(seq[j])
+            j += 1
+        p.append(s)
+        i += 1
+    return filter(p)
 
-def part(list):
-    over_list = comb(list, len(list))
+#supprime les doublons
+def filter(list):
     sub_list = []
-    for i in over_list :
+    for i in list:
         boolean = True
         for j in sub_list :
             if equals(i,j):
@@ -111,7 +71,7 @@ def part(list):
                 break
         if boolean :
             sub_list.append(i)
-    return comb(list,1) + sub_list
+    return sub_list
 
 def equals(list1,list2):
     if len(list1) == len(list2):
@@ -140,4 +100,6 @@ def complementary(list1, list2):
 
 print not_involved("t", [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")], ["A","B","C","D","E","F","G","H"])
 print find_consequence(["B"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")])
-print part(['A','B','C','D'])
+print partiesliste(['A', 'B', 'C', 'D'])
+print partiesliste(["A","B","C","D","E","F","G","H"])
+print find_super_key("t", ["A","B","C","D","E","F","G","H"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")])
