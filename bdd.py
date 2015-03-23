@@ -83,6 +83,11 @@ class Bdd(object):
             for attribute in implication :
                 if found and not self.is_useless(sigma,(sigma[i][0], functional_dependence, attribute)):
                     triplets.append((sigma[i][0], functional_dependence, attribute))
+        for i in triplets:
+            to_check = triplets[:]
+            to_check.remove(i)
+            if self.is_useless(to_check,i):
+                triplets.remove(i)
         return triplets
 
     def is_useless(self,triplet):
