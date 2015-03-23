@@ -3,14 +3,34 @@ import sqlite3
 class Bdd(object):
     def __init__(self, bdd_name):
         self.conn = sqlite3.connect(bdd_name+'.db')
-        self.funcDep = []
-
+	cur = conn.cursor()
+	with cur:
+		triplet_list = []
+		table_list = []
+		for table in cur.execute("SELECT name FROM sqlite_master WHERE type = 'table'"):
+			table_list.append(table[0])
+	if "FuncDep" not in table_list:
+		cur.execute("CREATE TABLE FunctDep (table TEXT, X TEXT, A TEXT )")
+		self.conn.commit()
+		cur.close
+		self.conn.close()
+	
     def funcDep(self):
-        return self.funcDep
+        self.conn = sqlite3.connect(bdd_name+'.db')
+	cur = conn.cursor()
+	with cur:
+		cur.execute("SELECT * FROM FuncDep")
+		for l in cur:
+			self.funcDep.append(l)
+	return self.funcDep
 
     def add_dep(self, triplet):
         if(self.detection(triplet)):
             self.funcDep.append(triplet)
+        	self.conn = sqlite3.connect(bdd_name+'.db')
+		cur = conn.cursor()
+		cur.execute("INSERT INTO FuncDep(table,X,A) VALUES("+triplet[0]+","+triplet[1]+","+triplet[2]+")")
+		self.conn.commit()
 
     def get_attributes(self,table):
         cur = self.conn.cursor()
