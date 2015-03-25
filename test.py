@@ -76,12 +76,9 @@ def get_logical_consequence(triplet_list):
                             print
                             break
             for attribute in implication :
-                if found and not is_useless(sigma,(sigma[i][0], functional_dependence, attribute)):
+                if found and not is_useless(sigma, (sigma[i][0], functional_dependence, attribute)):
                     triplets.append((sigma[i][0], functional_dependence, attribute))
-                if is_useless(sigma,(sigma[i][0], functional_dependence, attribute)):
-                    print (sigma[i][0], functional_dependence, i),
-                    print "is useless"
-            print
+        print
         return triplets
 
 def is_useless(functional_dependencies,triplet):
@@ -93,6 +90,11 @@ def is_useless(functional_dependencies,triplet):
 print(split_str("michel ma belle sont des mots qui vont tres bien ensembles"))
 print(included_in(['a','b','c'], ['x','b','v','d','a','g','c','s']))
 print "\n \n"
-print get_logical_consequence([("table1","A B","C"),("table2","michel","mabelle"),("table1","C D", "E"), ("table1", "B","D")])
 print '\n \n'
 print get_logical_consequence([("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")])
+print get_logical_consequence([("table1","A B","C"),("table2","michel","mabelle"),("table1","C D", "E"), ("table1", "B","D")])
+print get_logical_consequence([('t', 'C D', 'B'), ('t','A','E'), ('t', 'E F', 'A'), ('t', 'C','D'), ('t', 'A B E', 'F'), ('t', 'A B E', 'C'), ('t', 'A B', 'C'), ('t', 'A E', 'F')])
+
+
+
+

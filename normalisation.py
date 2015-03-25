@@ -60,6 +60,35 @@ def find_key(table, attributes, functional_dependencies):
             keys.append(super_key)
     return keys
 
+def is_BCNF(table, attributes, functional_dependencies):
+    sigma = []
+    for triplet in functional_dependencies:
+        if triplet[0] == table:
+            sigma.append(triplet)
+    for df in sigma:
+        if not equals(attributes, find_consequence(split_str(df[1]),sigma)+split_str(df[1])):
+            return False
+    return True
+
+
+def is_3NF(table, attributes, functional_dependencies):
+    sigma = []
+    for triplet in functional_dependencies:
+        if triplet[0] == table:
+            sigma.append(triplet)
+    key_list = find_key(table, attributes,functional_dependencies)
+    in_key = set([])
+    for key in key_list:
+        in_key = set(key) | in_key
+    if in_key == set(attributes):
+        return True
+    else:
+        for df in sigma:
+            if df[2] not in in_key:
+                if not equals(attributes, find_consequence(split_str(df[1]),sigma)+split_str(df[1])):
+                    return False
+        return True
+
 #http://python.jpvweb.com/mesrecettespython/doku.php?id=parties_ensemble
 def partiesliste(seq):
     p = []
@@ -89,22 +118,10 @@ def filter(list):
     return sub_list
 
 def equals(list1,list2):
-    if len(list1) == len(list2):
-        counter = 0
-        for i in list1:
-            for j in list2:
-                if i == j:
-                    counter += 1
-        if counter == len(list1):
-            return True
-    return False
+    return set(list1) == set(list2)
 
 def union(list1,list2):
-    list = list1[:]
-    for i in list2:
-        if i not in list:
-            list.append(i)
-    return list
+    return list(set(list1) | set(list2))
 
 def complementary(list1, list2):
     complementary_list = []
@@ -118,3 +135,9 @@ print find_consequence(["B"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"
 print find_super_key("t", ["A","B","C","D","E","F","G","H"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")])
 print find_key("t", ["A","B","C","D","E","F","G","H"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")])
 print find_key('t', ['A','B','C', 'D', 'E', 'F'], [('t', 'C D', 'B'), ('t','A','E'), ('t', 'E F', 'A'), ('t', 'C','D'), ('t', 'A B E', 'F'), ('t', 'A B E', 'C'), ('t', 'A B', 'C'), ('t', 'A E', 'F')])
+print find_key('t',['A','B','C', 'D', 'E', 'F'], [('t',' A B C D E F', 'D'), ('t', 'A C', 'E'), ('t','A B D', 'C'), ('t', 'E B', 'F'), ('t', 'E F', 'A'), ('t', 'E F', 'B'), ('t', 'E F', 'C'), ('t', 'A F', 'B'), ('t', 'A F', 'C')])
+print is_3NF('t',['A','B','C', 'D', 'E', 'F'], [('t',' A B C D E F', 'D'), ('t', 'A C', 'E'), ('t','A B D', 'C'), ('t', 'E B', 'F'), ('t', 'E F', 'A'), ('t', 'E F', 'B'), ('t', 'E F', 'C'), ('t', 'A F', 'B'), ('t', 'A F', 'C')])
+print is_3NF("t", ["A","B","C","D","E","F","G","H"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")])
+print is_3NF('t', ['A','B','C', 'D', 'E', 'F'], [('t', 'C D', 'B'), ('t','A','E'), ('t', 'E F', 'A'), ('t', 'C','D'), ('t', 'A B E', 'F'), ('t', 'A B E', 'C'), ('t', 'A B', 'C'), ('t', 'A E', 'F')])
+
+
