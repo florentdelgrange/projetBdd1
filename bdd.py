@@ -1,24 +1,32 @@
-import sqlite3
+import sqlite3 as lite
 from normalisation import *
 
 class Bdd(object):
     def __init__(self, bdd_name):
-        self.conn = sqlite3.connect(bdd_name+'.db')
-        cur = self.conn.cursor()
-        with cur:
+        self.conn = lite.connect(bdd_name+'.db')
+        with self.conn:
+            cur = self.conn.cursor()
             table_list = []
             for table in cur.execute("SELECT name FROM sqlite_master WHERE type = 'table'"):
                 table_list.append(table[0])
-        if "FuncDep" not in table_list:
-            cur.execute("CREATE TABLE FunctDep (table TEXT, X TEXT, A TEXT )")
-            self.conn.commit()
+            if "FuncDep" not in table_list:
+                cur.execute("CREATE TABLE FuncDep(name TEXT, X TEXT, A TEXT )")
+                self.conn.commit()
             cur.close()
-            self.conn.close()
+
+    def get_tables(self):
+        table_list = []
+        with self.conn:
+            cur = self.conn.cursor()
+            for table in cur.execute("SELECT name FROM sqlite_master WHERE type = 'table'"):
+                table_list.append(table[0])
+        cur.close()
+        return table_list
 
     def funcDep(self):
-        cur = self.conn.cursor()
         funcDep = []
-        with cur:
+        with self.conn:
+            cur = self.conn.cursor()
             for l in cur.execute("SELECT * FROM FuncDep"):
                 funcDep.append(l)
         cur.close()
@@ -26,41 +34,31 @@ class Bdd(object):
 
     def add_dep(self, triplet):
         if(self.detection(triplet)):
-            cur = self.conn.cursor()
-            with cur:
-                cur.execute("INSERT INTO FuncDep(table,X,A) VALUES("+triplet[0]+","+triplet[1]+","+triplet[2]+")")
-            cur.close()
+            with self.conn:
+                cur = self.conn.cursor()
+                cur.execute("INSERT INTO FuncDep VALUES (?, ?, ?)", triplet)
+                cur.close()
             self.conn.commit()
 
     def get_attributes(self,table):
-        cur = self.conn.cursor()
         list=[]
-        with cur:
+        with self.conn:
+            cur = self.conn.cursor()
             for raw in cur.execute("PRAGMA table_info("+table+")"):
                 list.append(raw[1])
-        self.conn.close()
+            cur.close()
         return list
 
     def detection(self, triplet):
-        cur = self.conn.cursor()
-        with cur:
-            #Test n1 : est-ce que la table (triplet[0]) existe ?
-            boolean = False
-            for raw in cur.execute("select name from sqlite_master where type = 'table'"):
-                if(raw[0]==triplet[0]):
-                    boolean=True
-                    break
-            if not boolean:
-                return False
-
-            #Test n2 : est-ce que les attributs sont bien tous dans cette table ?
-            list = split_str(triplet[1])
-            list.append(triplet[2])
-            for raw in cur.execute("PRAGMA table_info("+triplet[0]+")"):
-                if raw[1] not in list :
-                    self.conn.close()
-                    return False
-        self.conn.close()
+        #Test n1 : est-ce que la table (triplet[0]) existe ?
+        if triplet[0] not in self.get_tables():
+            print "la table n'existe pas"
+            return False
+        #Test n2 : est ce que les attributs de la dependance fonctionnelle entree en parametre sont bien dans cette table ?
+        parameters = split_str(triplet[1]) + [triplet[2]]
+        if not included_in(parameters, self.get_attributes(triplet[0])):
+            print "les attributs n'existent pas"
+            return False
         #Test n3 : est ce que cette df est utile ?
         return not self.is_useless(triplet)
 
@@ -123,26 +121,4 @@ class Bdd(object):
 
     def is_3NF(self,table):
         return is_3NF(table, self.get_attributes(table), self.funcDep())
-
-def included_in(list1,list2):
-    if len(list1) <= len(list2):
-        for i in list1:
-            if i not in list2:
-                return False
-        return True
-    else:
-        return False
-
-def split_str(str):
-    list=[]
-    word = ''
-    for i in range(len(str)):
-        if i==len(str)-1 or str[i] == ' ':
-            if i==len(str)-1:
-                word+=str[i]
-            list.append(word)
-            word=''
-        else:
-            word+=str[i]
-    return list
 
