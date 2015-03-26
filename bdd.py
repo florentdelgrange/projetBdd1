@@ -1,4 +1,5 @@
 import sqlite3
+from normalisation import *
 
 class Bdd(object):
     def __init__(self, bdd_name):
@@ -49,8 +50,8 @@ class Bdd(object):
                 if(raw[0]==triplet[0]):
                     boolean=True
                     break
-            if boolean==False :
-                return boolean
+            if not boolean:
+                return False
 
             #Test n2 : est-ce que les attributs sont bien tous dans cette table ?
             list = split_str(triplet[1])
@@ -60,7 +61,8 @@ class Bdd(object):
                     self.conn.close()
                     return False
         self.conn.close()
-        return True
+        #Test n3 : est ce que cette df est utile ?
+        return not self.is_useless(triplet)
 
     def get_logical_consequence(self):
         triplets = []
@@ -102,11 +104,6 @@ class Bdd(object):
             for attribute in implication :
                 if found and not self.is_useless(sigma, (sigma[i][0], functional_dependence, attribute)):
                     triplets.append((sigma[i][0], functional_dependence, attribute))
-        for i in triplets:
-            to_check = triplets[:]
-            to_check.remove(i)
-            if self.is_useless(to_check,i):
-                triplets.remove(i)
         return triplets
 
     def is_useless(self,triplet):
@@ -114,6 +111,18 @@ class Bdd(object):
             if triplet[0] == df[0] and triplet[2] == df[2] and included_in(split_str(df[1]),split_str(triplet[1])):
                 return True
         return False
+
+    def find_super_key(self,table):
+        return find_super_key(table, self.get_attributes(table), self.funcDep())
+
+    def find_key(self,table):
+        return find_key(table, self.get_attributes(table), self.funcDep())
+
+    def is_BCNF(self,table):
+        return is_BCNF(table, self.get_attributes(table), self.funcDep())
+
+    def is_3NF(self,table):
+        return is_3NF(table, self.get_attributes(table), self.funcDep())
 
 def included_in(list1,list2):
     if len(list1) <= len(list2):
