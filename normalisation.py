@@ -130,14 +130,25 @@ def complementary(list1, list2):
             complementary_list.append(i)
     return complementary_list
 
-print not_involved("t", [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")], ["A","B","C","D","E","F","G","H"])
-print find_consequence(["B"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")])
-print find_super_key("t", ["A","B","C","D","E","F","G","H"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")])
-print find_key("t", ["A","B","C","D","E","F","G","H"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")])
-print find_key('t', ['A','B','C', 'D', 'E', 'F'], [('t', 'C D', 'B'), ('t','A','E'), ('t', 'E F', 'A'), ('t', 'C','D'), ('t', 'A B E', 'F'), ('t', 'A B E', 'C'), ('t', 'A B', 'C'), ('t', 'A E', 'F')])
-print find_key('t',['A','B','C', 'D', 'E', 'F'], [('t',' A B C D E F', 'D'), ('t', 'A C', 'E'), ('t','A B D', 'C'), ('t', 'E B', 'F'), ('t', 'E F', 'A'), ('t', 'E F', 'B'), ('t', 'E F', 'C'), ('t', 'A F', 'B'), ('t', 'A F', 'C')])
-print is_3NF('t',['A','B','C', 'D', 'E', 'F'], [('t',' A B C D E F', 'D'), ('t', 'A C', 'E'), ('t','A B D', 'C'), ('t', 'E B', 'F'), ('t', 'E F', 'A'), ('t', 'E F', 'B'), ('t', 'E F', 'C'), ('t', 'A F', 'B'), ('t', 'A F', 'C')])
-print is_3NF("t", ["A","B","C","D","E","F","G","H"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")])
-print is_3NF('t', ['A','B','C', 'D', 'E', 'F'], [('t', 'C D', 'B'), ('t','A','E'), ('t', 'E F', 'A'), ('t', 'C','D'), ('t', 'A B E', 'F'), ('t', 'A B E', 'C'), ('t', 'A B', 'C'), ('t', 'A E', 'F')])
+def included_in(list1,list2):
+    if len(list1) <= len(list2):
+        for i in list1:
+            if i not in list2:
+                return False
+        return True
+    else:
+        return False
 
+def split_str(str):
+    list=[]
+    word = ''
+    for i in range(len(str)):
+        if i==len(str)-1 or str[i] == ' ':
+            if i==len(str)-1:
+                word+=str[i]
+            list.append(word)
+            word=''
+        else:
+            word+=str[i]
+    return list
 
