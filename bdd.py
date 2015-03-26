@@ -44,14 +44,20 @@ class Bdd(object):
                 for dep in depList:
                     print dep
         elif 'addDep' in command:
-            print("Dependence is like X -> A")
-            x = raw_input("Enter X : ")
-            a = raw_input("Enter A : ")
-            self.add_dep((command[1],x,a,))
+            if(len(command)) <= 1:
+                print("Parameter is missing")
+            else :
+                print("Dependence is like X -> A")
+                x = raw_input("Enter X : ")
+                a = raw_input("Enter A : ")
+                self.add_dep((command[1],x,a,))
         elif 'showAtt' in command:
-            attList = self.get_attributes(command[1])
-            for att in attList:
-                print att
+            if(len(command)) <= 1:
+                print("Parameter is missing")
+            else :
+                attList = self.get_attributes(command[1])
+                for att in attList:
+                    print att
         elif 'showLogDep' in command:
             depList = self.get_logical_consequence()
             if len(depList) <= 0:
@@ -59,6 +65,31 @@ class Bdd(object):
             else:
                 for dep in depList:
                     print dep
+        elif 'findSuperKey' in command:
+            if(len(command)) <= 1:
+                print("Parameter is missing")
+            else :
+                superKeyList = self.find_super_key(command[1])
+                for superKey in superKeyList:
+                    print(superKey)
+
+        elif 'findKey' in command:
+            if(len(command)) <= 1:
+                print("Parameter is missing")
+            else :
+                keyList = self.find_key(command[1])
+                for key in keyList:
+                    print(key)
+        elif 'isBcnf' in command:
+            if(len(command)) <= 1:
+                print("Parameter is missing")
+            else :
+                print(self.is_BCNF(command[1]))
+        elif 'is3nf' in command:
+            if(len(command)) <= 1:
+                print("Parameter is missing")
+            else :
+                print(self.is_3NF(command[1]))
         else:
             print("Command not found")
             print("Type \'Help\' to know how use SGBD")
@@ -149,7 +180,7 @@ class Bdd(object):
                             to_recheck=checklist
                             break
             for attribute in implication :
-                if found and not self.is_useless(sigma, (sigma[i][0], functional_dependence, attribute)):
+                if found and not self.is_useless(sigma, (sigma[i][0], functional_dependence, attribute) ):
                     triplets.append((sigma[i][0], functional_dependence, attribute))
         return triplets
 
