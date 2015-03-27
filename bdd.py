@@ -17,6 +17,7 @@ class Bdd(object):
                 cur.execute("CREATE TABLE FuncDep(name TEXT, X TEXT, A TEXT )")
                 self.conn.commit()
             cur.close()
+
     def run(self):
         input = raw_input("SGBD>>")
         if input == 'exit':
@@ -29,7 +30,6 @@ class Bdd(object):
         else:
             self.execute(input.split())
         return True
-
 
     def execute(self,command):
         if 'showTables' in command:
@@ -112,6 +112,16 @@ class Bdd(object):
         cur.close()
         return funcDep
 
+    def get_table_funcDep(self,table):
+        funcDep = []
+        with self.conn:
+            cur = self.conn.cursor()
+            for l in cur.execute("SELECT * FROM FuncDep"):
+                if l[0] == table:
+                    funcDep.append(l)
+        cur.close()
+        return funcDep
+
     def add_dep(self, triplet):
         if(self.detection(triplet)):
             with self.conn:
@@ -142,53 +152,26 @@ class Bdd(object):
         #Test n3 : est ce que cette df est utile ?
         return not self.is_useless(triplet)
 
-    def get_logical_consequence(self):
-        triplets = []
-        sigma = self.funcDep()
-        for i in range(len(sigma)):
-            functional_dependence = sigma[i][1]
-            #Pourquoi implication est une liste ? Cas ou la consequence logique implique 2 attributs ou plus ; c'est la raison de la presence de la variable "last_call"
-            implication = [sigma[i][2]]
-            last_call = ''
-            owned = split_str(sigma[i][1])+[sigma[i][2]]
-            to_recheck = sigma
-            added = True
-            found = False
-            while added: #tant qu'une df a ete ajoutee a l'etape precendente
-                added = False
-                checklist = []
-                for j in range(len(to_recheck)):
-                    if to_recheck[j][0] == sigma[i][0]:
-                        list = split_str(to_recheck[j][1])
-                        if not included_in(list,owned):
-                            checklist.append(to_recheck[j])
-                        else:
-                            if to_recheck[j][2] not in owned:
-                                if to_recheck[j][1] == last_call:
-                                    implication.append(to_recheck[j][2])
-                                else:
-                                    implication = [to_recheck[j][2]]
-                                owned.append(to_recheck[j][2])
-                                found = True
-                                last_call = to_recheck[j][1]
-                            for k in list:
-                                if k not in owned:
-                                    owned.append(k)
-                            added = True
-                            if j+1 < len(to_recheck):
-                                checklist += to_recheck[j+1:]
-                            to_recheck=checklist
-                            break
-            for attribute in implication :
-                if found and not self.is_useless(sigma, (sigma[i][0], functional_dependence, attribute) ):
-                    triplets.append((sigma[i][0], functional_dependence, attribute))
-        return triplets
-
     def is_useless(self,triplet):
         for df in self.funcDep():
-            if triplet[0] == df[0] and triplet[2] == df[2] and included_in(split_str(df[1]),split_str(triplet[1])):
+            if triplet[0] == df[0] and triplet[2] == df[2] and equals(split_str(df[1]),split_str(triplet[1])):
+                print "this functional dependence (" + df[1] + " -> " + df[2] + ") is already in the table"
                 return True
         return False
+
+    def get_logical_consequence(self, table):
+        logical_cons = []
+        funcDep = self.get_table_funcDep(table)
+        for df in funcDep:
+            part = partiesliste(split_str(df[1]))
+            sigma = funcDep[:]
+            sigma.remove(df)
+            for sub_X in part:
+                implicated = find_consequence(sub_X, sigma)
+                if df[2] in implicated:
+                    logical_cons.append(df)
+                    break
+        return logical_cons
 
     def find_super_key(self,table):
         return find_super_key(table, self.get_attributes(table), self.funcDep())
@@ -201,6 +184,7 @@ class Bdd(object):
 
     def is_3NF(self,table):
         return is_3NF(table, self.get_attributes(table), self.funcDep())
+
     def showHelp(self):
         print(10*"#"+"List of commands"+10*"#"+"\n")
         print(3*"- "+"showTables : show the name of all the tables in the database")

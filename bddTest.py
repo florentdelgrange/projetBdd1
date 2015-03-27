@@ -27,6 +27,8 @@ print (data_base.find_key('exam2012'))
 print (data_base.find_key('exam2013'))
 print (data_base.is_3NF('exam2012'))
 print (data_base.is_BCNF('exam2013'))
+print data_base.get_table_funcDep('exam2012')
+print data_base.get_logical_consequence('exam2013')
 while data_base.run():
     continue
 
