@@ -6,6 +6,12 @@ con = lite.connect('exams_bdd.db')
 with con:
 
     cur = con.cursor()
+    cur.execute("CREATE TABLE test(A TEXT, B TEXT, C TEXT, D TEXT, E TEXT)")
+    cur.execute("INSERT INTO test VALUES ('chien', 'chat', 'chien', 'chat', 'mamifere')")
+    cur.execute("INSERT INTO test VALUES ('chien', 'chat', 'chien', 'poisson', 'mamifere')")
+    cur.execute("INSERT INTO test VALUES ('animal', 'animaux', 'chien', 'chat', 'nom')")
+    cur.execute("INSERT INTO test VALUES ('italien', 'chat', 'francais', 'chat', 'rien')")
+
     cur.execute("CREATE TABLE exam2012(A TEXT, B TEXT, C TEXT, D TEXT, E TEXT, F TEXT, G TEXT, H TEXT)")
     cur.execute("CREATE TABLE exam2013(A INT, B INT, C INT, D INT, E INT, F INT)")
     cur.execute("INSERT INTO exam2012 VALUES ('PERRIER', 'FRAISE', 'POUR', 'LES BALAISES', 'PERRIER', 'GRENADINE', 'POUR', 'LES GAMINES')")
@@ -13,6 +19,8 @@ with con:
     for raw in cur.execute("SELECT * FROM exam2012"):
         print raw
     for raw in cur.execute("SELECT * FROM exam2013"):
+        print raw
+    for raw in cur.execute("SELECT * FROM test"):
         print raw
     con.commit()
     cur.close()

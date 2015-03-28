@@ -73,4 +73,3 @@ print (is_3NF('t',['A','B','C', 'D', 'E', 'F'], [('t',' A B C D E F', 'D'), ('t'
 print (is_3NF("t", ["A","B","C","D","E","F","G","H"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")]))
 print (is_3NF('t', ['A','B','C', 'D', 'E', 'F'], [('t', 'C D', 'B'), ('t','A','E'), ('t', 'E F', 'A'), ('t', 'C','D'), ('t', 'A B E', 'F'), ('t', 'A B E', 'C'), ('t', 'A B', 'C'), ('t', 'A E', 'F')]))
 print get_logical_consequence([('table', 'A', 'B'), ('table', 'B', 'C'), ('table', 'A', 'C')])
-

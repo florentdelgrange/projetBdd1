@@ -20,6 +20,9 @@ data_base.add_dep(('exam2013', 'A B E', 'F'))
 data_base.add_dep(('exam2013', 'A B E', 'C'))
 data_base.add_dep(('exam2013', 'A B', 'C'))
 data_base.add_dep(('exam2013', 'A E', 'F'))
+data_base.add_dep(('test', 'A', 'B'))
+data_base.add_dep(('test', 'C', 'D'))
+data_base.add_dep(('test', 'A B', 'E'))
 print (data_base.get_attributes("exam2012"))
 print (data_base.funcDep())
 print (data_base.find_super_key('exam2012'))
@@ -29,6 +32,5 @@ print (data_base.is_3NF('exam2012'))
 print (data_base.is_BCNF('exam2013'))
 print data_base.get_table_funcDep('exam2012')
 print data_base.get_logical_consequence('exam2013')
-while data_base.run():
-    continue
+print data_base.respect('test')
 

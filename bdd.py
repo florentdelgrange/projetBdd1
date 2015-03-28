@@ -152,6 +152,26 @@ class Bdd(object):
         #Test n3 : est ce que cette df est utile ?
         return not self.is_useless(triplet)
 
+    def respect(self, table):
+        list = []
+        sigma = self.get_table_funcDep(table)
+        print sigma
+        with self.conn:
+            cur = self.conn.cursor()
+            for df in sigma:
+                boolean = True
+                for raw1 in cur.execute('SELECT ' + df[1].replace(' ', ',') + ',' + df[2] + ' FROM ' + table):
+                    if boolean:
+                        for raw2 in cur.execute('SELECT ' + df[1].replace(' ', ',') + ',' + df[2] + ' FROM ' + table):
+                            if raw1[:len(raw1)-1] == raw2[:len(raw2)-1] and raw1[len(raw1)-1] != raw2[len(raw2)-1]:
+                                list.append(df)
+                                boolean = False
+                                break
+                    else:
+                        break
+            cur.close()
+        return list
+
     def is_useless(self,triplet):
         for df in self.funcDep():
             if triplet[0] == df[0] and triplet[2] == df[2] and equals(split_str(df[1]),split_str(triplet[1])):
