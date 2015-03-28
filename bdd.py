@@ -130,6 +130,17 @@ class Bdd(object):
                 cur.close()
             self.conn.commit()
 
+    def delete_dep(self, triplet):
+        if triplet not in self.funcDep():
+            return False
+        else:
+            with self.conn:
+                cur = self.conn.cursor()
+                cur.execute("DELETE FROM FuncDep WHERE name=? AND X=? AND A=?", triplet)
+                cur.close()
+            self.conn.commit()
+            return True
+
     def get_attributes(self,table):
         list=[]
         with self.conn:

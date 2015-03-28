@@ -33,4 +33,3 @@ print (data_base.is_BCNF('exam2013'))
 print data_base.get_table_funcDep('exam2012')
 print data_base.get_logical_consequence('exam2013')
 print data_base.respect('test')
-
