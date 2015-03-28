@@ -140,15 +140,5 @@ def included_in(list1,list2):
         return False
 
 def split_str(str):
-    list=[]
-    word = ''
-    for i in range(len(str)):
-        if i==len(str)-1 or str[i] == ' ':
-            if i==len(str)-1:
-                word+=str[i]
-            list.append(word)
-            word=''
-        else:
-            word+=str[i]
-    return list
+    return str.split(' ')
 
