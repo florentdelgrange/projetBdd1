@@ -73,3 +73,11 @@ print (is_3NF('t',['A','B','C', 'D', 'E', 'F'], [('t',' A B C D E F', 'D'), ('t'
 print (is_3NF("t", ["A","B","C","D","E","F","G","H"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")]))
 print (is_3NF('t', ['A','B','C', 'D', 'E', 'F'], [('t', 'C D', 'B'), ('t','A','E'), ('t', 'E F', 'A'), ('t', 'C','D'), ('t', 'A B E', 'F'), ('t', 'A B E', 'C'), ('t', 'A B', 'C'), ('t', 'A E', 'F')]))
 print get_logical_consequence([('table', 'A', 'B'), ('table', 'B', 'C'), ('table', 'A', 'C')])
+print
+print (find_key('t', ['A','B','C', 'D', 'E', 'F'], [('t', 'C D', 'B'), ('t','A','E'), ('t', 'E F', 'A'), ('t', 'C','D'), ('t', 'A B E', 'F'), ('t', 'A B E', 'C'), ('t', 'A B', 'C'), ('t', 'A E', 'F')]))
+print union(['Arabseque','Bretagne','Chien', 'Detritus', 'Enfant', 'Film'], ['michel', 'Chien', 'Chat'])
+print included_in(['Chien', 'Michel', 'Chat'], ['Horloge', 'Michel', 'Chien', 'Grue', 'Chat'])
+print equals(['Lord', 'Voldemort'], ['Voldemort', 'Lord'])
+print (get_logical_consequence([('t',' A B C D E F', 'D'), ('t', 'A C', 'E'), ('t','A B D', 'C'), ('t', 'E B', 'F'), ('t', 'E F', 'A'), ('t', 'E F', 'B'), ('t', 'E F', 'C'), ('t', 'A F', 'B'), ('t', 'A F', 'C')]))
+print (find_key('t',['Arabesque','Bretagne','Chien', 'Detritus', 'Enfant', 'Film'], [('t','Arabesque Bretagne Chien Detritus Enfant Film', 'Detritus'), ('t', 'Arabesque Chien', 'Enfant'), ('t','Arabesque Bretagne Detritus', 'Chien'), ('t', 'Enfant Bretagne', 'Film'), ('t', 'Enfant Film', 'Arabesque'), ('t', 'Enfant Film', 'Bretagne'), ('t', 'Enfant Film', 'Chien'), ('t', 'Arabesque Film', 'Bretagne'), ('t', 'Arabesque Film', 'Chien')]))
+
