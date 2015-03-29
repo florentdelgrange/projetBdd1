@@ -162,9 +162,9 @@ def getMiniMalDepList(depList):
             newDepList.append(dep)
     return newDepList
 
+#renvoie la liste correspondant a une chaine de caractere (les espaces sont ignores)
 def split_str(str):
     return str.split(' ')
-
 
 def unsplit_str(list):
     str = ''

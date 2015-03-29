@@ -89,10 +89,10 @@ class Bdd(object):
         #Test n3 : est ce que cette df est utile ?
         return not self.is_useless(triplet)
 
+    #retourne les dependences fonctionelles non respectees dans la table entree en parametre
     def respect(self, table):
         list = []
         sigma = self.get_table_funcDep(table)
-        print (sigma)
         with self.conn:
             cur = self.conn.cursor()
             for df in sigma:
@@ -112,7 +112,6 @@ class Bdd(object):
     def is_useless(self,triplet):
         for df in self.funcDep():
             if triplet[0] == df[0] and triplet[2] == df[2] and equals(split_str(df[1]),split_str(triplet[1])):
-                print ("this functional dependence (" + df[1] + " -> " + df[2] + ") is already in the table")
                 return True
         return False
 
