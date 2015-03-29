@@ -182,7 +182,7 @@ def merge(list,newList):
                     list.append(dep)
                     placed = True
             if(not placed):
-                newList.append(dep)
+                newList.append([dep])
             placed = False
     return newList
 

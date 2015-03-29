@@ -147,19 +147,20 @@ class Bdd(object):
         """
         if len(self.respect(table)) <= 0 :
             cons = self.get_logical_consequence(table)
+
             while len(cons) > 0:
                 self.delete_dep(cons[0])
                 cons = self.get_logical_consequence(table)
             minimal = get_minimal_funcDep(self.get_table_funcDep(table))
+            conn = lite.connect(minimal[0][0]+"decomposition.db")
             minimal = merge(minimal,[])
             print(minimal)
-            conn = lite.connect(minimal[0][0]+"decomposition.db")
-            cur = self.conn.cursor()
+            cur = conn.cursor()
             cur.execute("CREATE TABLE FuncDep(name TEXT, X TEXT, A TEXT )")
             i = 1
             for listDep in minimal:
                 for dep in listDep:
-                    triplet = (dep[0]+i,dep[1],dep[2])
+                    triplet = ("table"+`i`,dep[1],dep[2])
                     cur.execute("INSERT INTO FuncDep VALUES (?, ?, ?)", triplet)
                 i+=1
             conn.commit()

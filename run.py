@@ -19,7 +19,7 @@ def run(application):
 def showHelp():
         print(10*"#"+"List of commands"+10*"#"+"\n")
         print(3*" - "+"showTables : show the name of all the tables in the database")
-        print(3*" - "+"showDep : show all the functional dependencies")
+        print(3*" - "+"showDep (nameTable)*: show all the functional dependencies (for nameTable)*")
         print(3*" - "+"addDep nameTable : add a functional dependence to nameTable")
         print(3*" - "+"delDep nameTable : delete a functional dependence to nameTable")
         print(3*" - "+"showAtt nameTable : show the name of all the attributes of nameTable")
@@ -95,14 +95,18 @@ def execute(application,command):
         else :
             superKeyList = application.find_super_key(command[1])
             for superKey in superKeyList:
-                print(superKey)
+                for att in superKey:
+                    print(att),
+                print("\n")
     elif 'findKey' in command:
         if(len(command)) <= 1:
             print("Parameter is missing")
         else :
             keyList = application.find_key(command[1])
             for key in keyList:
-                print(key)
+                for att in key:
+                    print(att),
+                print("\n")
     elif 'isBcnf' in command:
         if(len(command)) <= 1:
             print("Parameter is missing")
@@ -113,6 +117,11 @@ def execute(application,command):
             print("Parameter is missing")
         else :
             print(application.is_3NF(command[1]))
+            input = raw_input("Do you want to make decomposition in 3NF")
+            if "o" in input or "O" in input:
+                application.decompose(command[1])
+                print("Decomposition finished")
+
     elif 'respect' in command:
         if(len(command)) <= 1:
             print("Parameter is missing")
