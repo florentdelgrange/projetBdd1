@@ -3,21 +3,20 @@ __author__ = 'Martin'
 import sys
 from bdd import *
 
-def run(self,application):
-    self.app = application
+def run(application):
     input = raw_input("SGBD>>")
     if input == 'exit':
         print("Good Bye")
         return False
     elif input == "help":
-        self.showHelp()
+        showHelp()
         return True
 
     else:
-        self.execute(input.split())
+        execute(application,input.split())
     return True
 
-def showHelp(self):
+def showHelp():
         print(10*"#"+"List of commands"+10*"#"+"\n")
         print(3*"- "+"showTables : show the name of all the tables in the database")
         print(3*"- "+"showDep : show all the functional dependencies")
@@ -30,18 +29,23 @@ def showHelp(self):
         print(3*"- "+"is3nf nameTable : say if nameTable is in 3NF\n")
 
 
-def execute(self,command):
+def execute(application,command):
     if 'showTables' in command:
-        tableList = self.app.get_tables()
+        tableList = application.get_tables()
         for table in tableList:
             print table
     elif 'showDep' in command:
-        depList = self.app.funcDep()
+        depList = application.funcDep()
         if len(depList) <= 0:
             print("No dependencies")
         else:
             for dep in depList:
-                print dep
+                if len(command) > 1:
+                    if command[1] == dep[0]:
+                        print dep
+                else:
+                    print dep
+
     elif 'addDep' in command:
         if(len(command)) <= 1:
             print("Parameter is missing")
@@ -49,16 +53,16 @@ def execute(self,command):
             print("Dependence is like X -> A")
             x = raw_input("Enter X : ")
             a = raw_input("Enter A : ")
-            self.app.add_dep((command[1],x,a,))
+            application.add_dep((command[1],x,a,))
     elif 'showAtt' in command:
         if(len(command)) <= 1:
             print("Parameter is missing")
         else :
-            attList = self.app.get_attributes(command[1])
+            attList = application.get_attributes(command[1])
             for att in attList:
                 print att
     elif 'showLogDep' in command:
-        depList = self.app.get_logical_consequence()
+        depList = application.get_logical_consequence()
         if len(depList) <= 0:
             print("No dependencies")
         else:
@@ -68,7 +72,7 @@ def execute(self,command):
         if(len(command)) <= 1:
             print("Parameter is missing")
         else :
-            superKeyList = self.app.find_super_key(command[1])
+            superKeyList = application.find_super_key(command[1])
             for superKey in superKeyList:
                 print(superKey)
 
@@ -76,19 +80,19 @@ def execute(self,command):
         if(len(command)) <= 1:
             print("Parameter is missing")
         else :
-            keyList = self.app.find_key(command[1])
+            keyList = application.find_key(command[1])
             for key in keyList:
                 print(key)
     elif 'isBcnf' in command:
         if(len(command)) <= 1:
             print("Parameter is missing")
         else :
-            print(self.app.is_BCNF(command[1]))
+            print(application.is_BCNF(command[1]))
     elif 'is3nf' in command:
         if(len(command)) <= 1:
             print("Parameter is missing")
         else :
-            print(self.app.is_3NF(command[1]))
+            print(application.is_3NF(command[1]))
     else:
         print("Command not found")
         print("Type \'Help\' to know how use SGBD")
