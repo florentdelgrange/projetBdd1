@@ -152,30 +152,14 @@ def included_in(list1,list2):
     else:
         return False
 
-def includeAtt(att,depList,listAtt):
-    newAtt = []
-    if len(att) <= 0 :
-        return listAtt
-    else:
-        for a in att:
-            for dep in depList:
-                if a == dep[1]:
-                    if dep[2] not in listAtt:
-                        listAtt.append(dep[2])
-                    newAtt.append(dep[2])
-        return includeAtt(newAtt,depList,listAtt)
-
-def deleteLogDep(depList):
+def getMiniMalDepList(depList):
     newDepList =[]
     for dep in depList:
-        listAtt = includeAtt(dep[1],depList,[])
-        listX = ""
-        for a in split_str(dep[1]):
-            if a not in listAtt:
-                if len(listX) > 0:
-                    listX +=" "
-                listX+=a
-        newDepList.append((dep[0],listX,dep[2]))
+        minimal = minimal_dependence(dep,depList)
+        if len(minimal) > 0:
+            newDepList.append(minimal)
+        else:
+            newDepList.append(dep)
     return newDepList
 
 #renvoie la liste correspondant a une chaine de caractere (les espaces sont ignores)

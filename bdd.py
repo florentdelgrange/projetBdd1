@@ -141,6 +141,24 @@ class Bdd(object):
     def is_3NF(self,table):
         return is_3NF(table, self.get_attributes(table), self.funcDep())
 
+    def decompose(self,table):
+        minimalDep = getMiniMalDepList(self.get_table_funcDep(table))
+        conn = lite.connect(minimalDep[0][0]+"decomposition.db")
+        cur = self.conn.cursor()
+        attList = []
+        i = 1
+        for dep in minimalDep:
+            if dep[1] not in attList:
+                triplet = (dep[0]+i,dep[1],dep[2])
+                cur.execute("CREATE TABLE FuncDep(name TEXT, X TEXT, A TEXT )")
+                cur.execute("INSERT INTO FuncDep VALUES (?, ?, ?)", triplet)
+            else:
+                cur.execute("SELECT name FROM sqlite_master WHERE X = ? and A = ?")
+
+        conn.commit()
+
+
+
 
 
 
