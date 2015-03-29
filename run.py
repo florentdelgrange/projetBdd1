@@ -87,9 +87,6 @@ def execute(application,command):
                                 print("Consequence delete")
                             i+=1
 
-
-
-
     elif 'findSuperKey' in command:
         if(len(command)) <= 1:
             print("Parameter is missing")
