@@ -69,9 +69,6 @@ print(find_super_key("t", ["A","B","C","D","E","F","G","H"], [("t", "A B","C"), 
 print (find_key("t", ["A","B","C","D","E","F","G","H"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")]))
 print (find_key('t', ['A','B','C', 'D', 'E', 'F'], [('t', 'C D', 'B'), ('t','A','E'), ('t', 'E F', 'A'), ('t', 'C','D'), ('t', 'A B E', 'F'), ('t', 'A B E', 'C'), ('t', 'A B', 'C'), ('t', 'A E', 'F')]))
 print (find_key('t',['A','B','C', 'D', 'E', 'F'], [('t',' A B C D E F', 'D'), ('t', 'A C', 'E'), ('t','A B D', 'C'), ('t', 'E B', 'F'), ('t', 'E F', 'A'), ('t', 'E F', 'B'), ('t', 'E F', 'C'), ('t', 'A F', 'B'), ('t', 'A F', 'C')]))
-print (is_3NF('t',['A','B','C', 'D', 'E', 'F'], [('t',' A B C D E F', 'D'), ('t', 'A C', 'E'), ('t','A B D', 'C'), ('t', 'E B', 'F'), ('t', 'E F', 'A'), ('t', 'E F', 'B'), ('t', 'E F', 'C'), ('t', 'A F', 'B'), ('t', 'A F', 'C')]))
-print (is_3NF("t", ["A","B","C","D","E","F","G","H"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")]))
-print (is_3NF('t', ['A','B','C', 'D', 'E', 'F'], [('t', 'C D', 'B'), ('t','A','E'), ('t', 'E F', 'A'), ('t', 'C','D'), ('t', 'A B E', 'F'), ('t', 'A B E', 'C'), ('t', 'A B', 'C'), ('t', 'A E', 'F')]))
 print get_logical_consequence([('table', 'A', 'B'), ('table', 'B', 'C'), ('table', 'A', 'C')])
 print
 print (find_key('t', ['A','B','C', 'D', 'E', 'F'], [('t', 'C D', 'B'), ('t','A','E'), ('t', 'E F', 'A'), ('t', 'C','D'), ('t', 'A B E', 'F'), ('t', 'A B E', 'C'), ('t', 'A B', 'C'), ('t', 'A E', 'F')]))
@@ -82,3 +79,8 @@ print (get_logical_consequence([('t',' A B C D E F', 'D'), ('t', 'A C', 'E'), ('
 print (find_key('t',['Arabesque','Bretagne','Chien', 'Detritus', 'Enfant', 'Film'], [('t','Arabesque Bretagne Chien Detritus Enfant Film', 'Detritus'), ('t', 'Arabesque Chien', 'Enfant'), ('t','Arabesque Bretagne Detritus', 'Chien'), ('t', 'Enfant Bretagne', 'Film'), ('t', 'Enfant Film', 'Arabesque'), ('t', 'Enfant Film', 'Bretagne'), ('t', 'Enfant Film', 'Chien'), ('t', 'Arabesque Film', 'Bretagne'), ('t', 'Arabesque Film', 'Chien')]))
 print get_logical_consequence([('myTable', 'C E', 'A'),('myTable', 'C', 'D'),('myTable', 'A', 'B'),('myTable', 'D', 'B'),('myTable', 'D', 'E'),('myTable', 'B', 'F'),('myTable', 'A D', 'C'),('myTable', 'A D', 'F')])
 print merge(get_minimal_funcDep([('myTable', 'A B', 'C'),('myTable', 'A B C', 'D')]),[])
+print get_minimal_funcDep([('myTable', 'A B', 'C'),('myTable', 'A B C', 'D')])
+print (is_3NF('t',['A','B','C', 'D', 'E', 'F'], [('t',' A B C D E F', 'D'), ('t', 'A C', 'E'), ('t','A B D', 'C'), ('t', 'E B', 'F'), ('t', 'E F', 'A'), ('t', 'E F', 'B'), ('t', 'E F', 'C'), ('t', 'A F', 'B'), ('t', 'A F', 'C')]))
+print (is_3NF("t", ["A","B","C","D","E","F","G","H"], [("t", "A B","C"), ("t","A B","D"), ("t", "G", "E"), ("t", "E F", "G"), ("t", "E F", "H"), ("t", "B C D", "A"), ("t", "B", "F"), ("t", "F", "A")]))
+print (is_3NF('t', ['A','B','C', 'D', 'E', 'F'], [('t', 'C D', 'B'), ('t','A','E'), ('t', 'E F', 'A'), ('t', 'C','D'), ('t', 'A B E', 'F'), ('t', 'A B E', 'C'), ('t', 'A B', 'C'), ('t', 'A E', 'F')]))
+
