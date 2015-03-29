@@ -151,29 +151,15 @@ def included_in(list1,list2):
         return True
     else:
         return False
-def includeAtt(att,depList,listAtt):
-    newAtt = []
-    if len(att) <= 0 :
-        return listAtt
-    else:
-        for a in att:
-            for dep in depList:
-                if a == dep[1]:
-                    if dep[2] not in listAtt:
-                        listAtt.append(dep[2])
-                    newAtt.append(dep[2])
-        return includeAtt(newAtt,depList,listAtt)
-def deleteLogDep(depList):
+
+def getMiniMalDepList(depList):
     newDepList =[]
     for dep in depList:
-        listAtt = includeAtt(dep[1],depList,[])
-        listX = ""
-        for a in split_str(dep[1]):
-            if a not in listAtt:
-                if len(listX) > 0:
-                    listX +=" "
-                listX+=a
-        newDepList.append((dep[0],listX,dep[2]))
+        minimal = minimal_dependence(dep,depList)
+        if len(minimal) > 0:
+            newDepList.append(minimal)
+        else:
+            newDepList.append(dep)
     return newDepList
 
 
@@ -183,7 +169,4 @@ def deleteLogDep(depList):
 def split_str(str):
     return str.split(' ')
 
-#print find_consequence(["C","E"],[('myTable', 'C E', 'A'),('myTable', 'C', 'D'),('myTable', 'A', 'B'),('myTable', 'D', 'B'),('myTable', 'D', 'E'),('myTable', 'B', 'F'),('myTable', 'A D', 'C')])
-depList =  [('myTable', 'C E', 'A'),('myTable', 'C', 'D'),('myTable', 'A', 'B'),('myTable', 'D', 'B'),('myTable', 'D', 'E'),('myTable', 'B', 'F'),('myTable', 'A D', 'C')]
-print depList
-print(deleteLogDep(depList))
+
