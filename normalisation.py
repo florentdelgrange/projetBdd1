@@ -162,10 +162,6 @@ def getMiniMalDepList(depList):
             newDepList.append(dep)
     return newDepList
 
-
-
-
-
 def split_str(str):
     return str.split(' ')
 
