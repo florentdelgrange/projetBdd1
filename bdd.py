@@ -18,8 +18,6 @@ class Bdd(object):
                 self.conn.commit()
             cur.close()
 
-
-
     def get_tables(self):
         table_list = []
         with self.conn:
@@ -142,7 +140,7 @@ class Bdd(object):
         return is_3NF(table, self.get_attributes(table), self.funcDep())
 
     def decompose(self,table):
-        minimalDep = getMiniMalDepList(self.get_table_funcDep(table))
+        minimalDep = get_minimal_funcDep(self.get_table_funcDep(table))
         conn = lite.connect(minimalDep[0][0]+"decomposition.db")
         cur = self.conn.cursor()
         attList = []
@@ -154,7 +152,6 @@ class Bdd(object):
                 cur.execute("INSERT INTO FuncDep VALUES (?, ?, ?)", triplet)
             else:
                 cur.execute("SELECT name FROM sqlite_master WHERE X = ? and A = ?")
-
         conn.commit()
 
 
