@@ -152,6 +152,7 @@ class Bdd(object):
                 cons = self.get_logical_consequence(table)
             minimal = get_minimal_funcDep(self.get_table_funcDep(table))
             minimal = merge(minimal,[])
+            print(minimal)
             conn = lite.connect(minimal[0][0]+"decomposition.db")
             cur = self.conn.cursor()
             cur.execute("CREATE TABLE FuncDep(name TEXT, X TEXT, A TEXT )")
