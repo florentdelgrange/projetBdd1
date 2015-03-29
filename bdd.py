@@ -191,16 +191,26 @@ class Bdd(object):
         return find_key(table, self.get_attributes(table), self.funcDep())
 
     def is_BCNF(self,table):
+        '''
+        return true if the table entered in parameter is in BCNF
+        :param table: the table to test
+        :return: True if the table is in BCNF, False else.
+        '''
         return is_BCNF(table, self.get_attributes(table), self.funcDep())
 
     def is_3NF(self,table):
+        '''
+        return true if the table entered in parameter is in 3NF
+        :param table: the table to test
+        :return: True if the table is in 3NF, False else.
+        '''
         return is_3NF(table, self.get_attributes(table), self.funcDep())
 
     def decompose(self,table):
         """
         Generate a 3NF decomposition in a new database
-        :param table:
-        :return:
+        :param table: the table to test
+        :return: /
         """
         if len(self.respect(table)) <= 0 :
             cons = self.get_logical_consequence(table)
