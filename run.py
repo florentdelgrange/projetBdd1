@@ -33,7 +33,7 @@ def execute(application,command):
     if 'showTables' in command:
         tableList = application.get_tables()
         for table in tableList:
-            print table
+            print (table)
     elif 'showDep' in command:
         depList = application.funcDep()
         if len(depList) <= 0:
@@ -42,9 +42,9 @@ def execute(application,command):
             for dep in depList:
                 if len(command) > 1:
                     if command[1] == dep[0]:
-                        print dep
+                        print (dep[0]+" "+dep[1]+" -> "+dep[2])
                 else:
-                    print dep
+                    print (dep[0]+" | "+dep[1]+" -> "+dep[2])
 
     elif 'addDep' in command:
         if(len(command)) <= 1:
@@ -60,14 +60,17 @@ def execute(application,command):
         else :
             attList = application.get_attributes(command[1])
             for att in attList:
-                print att
+                print (att)
     elif 'showLogDep' in command:
-        depList = application.get_logical_consequence()
-        if len(depList) <= 0:
-            print("No dependencies")
+        if(len(command)) <= 1:
+            print("Parameter is missing")
         else:
-            for dep in depList:
-                print dep
+            depList = application.get_logical_consequence(command[1])
+            if len(depList) <= 0:
+                print("No dependencies")
+            else:
+                for dep in depList:
+                    print (dep[0]+" "+dep[1]+" -> "+dep[2])
     elif 'findSuperKey' in command:
         if(len(command)) <= 1:
             print("Parameter is missing")
