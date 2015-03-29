@@ -151,6 +151,7 @@ def included_in(list1,list2):
         return True
     else:
         return False
+
 def includeAtt(att,depList,listAtt):
     newAtt = []
     if len(att) <= 0 :
@@ -163,6 +164,7 @@ def includeAtt(att,depList,listAtt):
                         listAtt.append(dep[2])
                     newAtt.append(dep[2])
         return includeAtt(newAtt,depList,listAtt)
+
 def deleteLogDep(depList):
     newDepList =[]
     for dep in depList:
@@ -176,10 +178,7 @@ def deleteLogDep(depList):
         newDepList.append((dep[0],listX,dep[2]))
     return newDepList
 
-
-
-
-
+#renvoie la liste correspondant a une chaine de caractere (les espaces sont ignores)
 def split_str(str):
     return str.split(' ')
 
