@@ -67,6 +67,7 @@ def is_BCNF(table, attributes, functional_dependencies):
             sigma.append(triplet)
     for df in sigma:
         if not equals(attributes, find_consequence(split_str(df[1]),sigma)+split_str(df[1])):
+            print attributes, " != ", find_consequence(split_str(df[1]),sigma)+split_str(df[1])
             return False
     return True
 
@@ -88,6 +89,18 @@ def is_3NF(table, attributes, functional_dependencies):
                 if not equals(attributes, find_consequence(split_str(df[1]),sigma)+split_str(df[1])):
                     return False
         return True
+
+#retourne l'ensemble minimal X -> A
+def minimal_dependence(triplet, functional_dependencies):
+    #remarque : function_dependencies correpond a l'esemble des DF d'une table en particulier
+    X = split_str(triplet[1])
+    parties = partiesliste(X)
+    X_mini = X
+    for sub_X in parties:
+        if triplet[2] in find_consequence(sub_X,functional_dependencies):
+            if len(sub_X) < len(X_mini):
+                X_mini = sub_X
+    return X_mini
 
 #http://python.jpvweb.com/mesrecettespython/doku.php?id=parties_ensemble
 def partiesliste(seq):
