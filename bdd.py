@@ -140,19 +140,32 @@ class Bdd(object):
         return is_3NF(table, self.get_attributes(table), self.funcDep())
 
     def decompose(self,table):
-        minimalDep = get_minimal_funcDep(self.get_table_funcDep(table))
-        conn = lite.connect(minimalDep[0][0]+"decomposition.db")
-        cur = self.conn.cursor()
-        attList = []
-        i = 1
-        for dep in minimalDep:
-            if dep[1] not in attList:
-                triplet = (dep[0]+i,dep[1],dep[2])
-                cur.execute("CREATE TABLE FuncDep(name TEXT, X TEXT, A TEXT )")
-                cur.execute("INSERT INTO FuncDep VALUES (?, ?, ?)", triplet)
-            else:
-                cur.execute("SELECT name FROM sqlite_master WHERE X = ? and A = ?")
-        conn.commit()
+        """
+        Generate a 3NF decomposition in a new database
+        :param table:
+        :return:
+        """
+        if len(self.respect(table)) <= 0 :
+            cons = self.get_logical_consequence(table)
+            while len(cons) > 0:
+                self.delete_dep(cons[0])
+                cons = self.get_logical_consequence(table)
+            minimal = get_minimal_funcDep(self.get_table_funcDep(table))
+            minimal = merge(minimal,[])
+            conn = lite.connect(minimal[0][0]+"decomposition.db")
+            cur = self.conn.cursor()
+            cur.execute("CREATE TABLE FuncDep(name TEXT, X TEXT, A TEXT )")
+            i = 1
+            for listDep in minimal:
+                for dep in listDep:
+                    triplet = (dep[0]+i,dep[1],dep[2])
+                    cur.execute("INSERT INTO FuncDep VALUES (?, ?, ?)", triplet)
+                i+=1
+            conn.commit()
+            cur.close()
+            conn.close()
+        else:
+            print("The table don't respect de functional dependencies")
 
 
 
