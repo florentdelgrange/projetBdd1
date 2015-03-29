@@ -18,15 +18,17 @@ def run(application):
 
 def showHelp():
         print(10*"#"+"List of commands"+10*"#"+"\n")
-        print(3*"- "+"showTables : show the name of all the tables in the database")
-        print(3*"- "+"showDep : show all the functional dependencies")
-        print(3*"- "+"addDep nameTable : add a functional dependence to nameTable")
-        print(3*"- "+"showAtt nameTable : show the name of all the attributes of nameTable")
-        print(3*"- "+"showLogCons nameTable : show all the logical dependencies")
-        print(3*"- "+"findSuperKey nameTable : find all the super keys of nameTable")
-        print(3*"- "+"findKey nameTable : find the key of nameTable")
-        print(3*"- "+"isBcnf nameTable : say if nameTable is in BCNF")
-        print(3*"- "+"is3nf nameTable : say if nameTable is in 3NF\n")
+        print(3*" - "+"showTables : show the name of all the tables in the database")
+        print(3*" - "+"showDep : show all the functional dependencies")
+        print(3*" - "+"addDep nameTable : add a functional dependence to nameTable")
+        print(3*" - "+"delDep nameTable : delete a functional dependence to nameTable")
+        print(3*" - "+"showAtt nameTable : show the name of all the attributes of nameTable")
+        print(3*" - "+"showLogCons nameTable : show all the logical dependencies")
+        print(3*" - "+"findSuperKey nameTable : find all the super keys of nameTable")
+        print(3*" - "+"findKey nameTable : find the key of nameTable")
+        print(3*" - "+"isBcnf nameTable : say if nameTable is in BCNF")
+        print(3*" - "+"respect nameTable : say if all the functional dependence are respected")
+        print(3*" - "+"is3nf nameTable : say if nameTable is in 3NF\n")
 
 
 def execute(application,command):
@@ -111,6 +113,23 @@ def execute(application,command):
             print("Parameter is missing")
         else :
             print(application.is_3NF(command[1]))
+    elif 'respect' in command:
+        if(len(command)) <= 1:
+            print("Parameter is missing")
+        else :
+            respect = application.respect(command[1])
+            if len(respect) == 0:
+                print("All the dependence are respected")
+            else:
+                print("Som dependence are not respected")
+                i=1
+                for triplet in respect:
+                    print (str(i)+" : "+triplet[0]+" "+triplet[1]+" -> "+triplet[2])
+                    i+=1
+                number = raw_input("Do you want delete a functional dependence ? (Enter the a number or 0 to continue")
+                while int(number) != 0:
+                    application.delete_dep(respect[int(number)-1])
+
     else:
         print("Command not found")
         print("Type \'Help\' to know how use SGBD")
