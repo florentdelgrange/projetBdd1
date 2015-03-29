@@ -152,15 +152,12 @@ def included_in(list1,list2):
     else:
         return False
 
-def getMiniMalDepList(depList):
-    newDepList =[]
-    for dep in depList:
-        minimal = minimal_dependence(dep,depList)
-        if len(minimal) > 0:
-            newDepList.append(minimal)
-        else:
-            newDepList.append(dep)
-    return newDepList
+def get_minimal_funcDep(functional_dependencies):
+    new_functional_dependencies =[]
+    for df in functional_dependencies:
+        minimal = minimal_dependence(df,functional_dependencies)
+        new_functional_dependencies.append(minimal)
+    return new_functional_dependencies
 
 #renvoie la liste correspondant a une chaine de caractere (les espaces sont ignores)
 def split_str(str):
