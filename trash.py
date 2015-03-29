@@ -122,3 +122,5 @@ def get_logical_consequence(func_dep):
                 if found :#and not is_useless(sigma, (sigma[i][0], functional_dependence, attribute) ):
                     triplets.append((sigma[i][0], functional_dependence, attribute))
         return triplets
+
+print get_logical_consequence([('myTable', 'C E', 'A'),('myTable', 'C', 'D'),('myTable', 'A', 'B'),('myTable', 'D', 'B'),('myTable', 'D', 'E'),('myTable', 'B', 'F'),('myTable', 'A D', 'C')])

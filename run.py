@@ -22,7 +22,7 @@ def showHelp():
         print(3*"- "+"showDep : show all the functional dependencies")
         print(3*"- "+"addDep nameTable : add a functional dependence to nameTable")
         print(3*"- "+"showAtt nameTable : show the name of all the attributes of nameTable")
-        print(3*"- "+"showLogDep : show all the logical dependencies")
+        print(3*"- "+"showLogCons nameTable : show all the logical dependencies")
         print(3*"- "+"findSuperKey nameTable : find all the super keys of nameTable")
         print(3*"- "+"findKey nameTable : find the key of nameTable")
         print(3*"- "+"isBcnf nameTable : say if nameTable is in BCNF")
@@ -61,16 +61,35 @@ def execute(application,command):
             attList = application.get_attributes(command[1])
             for att in attList:
                 print (att)
-    elif 'showLogDep' in command:
+    elif 'showLogCons' in command:
         if(len(command)) <= 1:
             print("Parameter is missing")
         else:
-            depList = application.get_logical_consequence(command[1])
-            if len(depList) <= 0:
-                print("No dependencies")
-            else:
-                for dep in depList:
-                    print (dep[0]+" "+dep[1]+" -> "+dep[2])
+            number = 1
+            while number > 0:
+                depList = application.get_logical_consequence(command[1])
+                if len(depList) <= 0:
+                    print("No logical consequence ")
+                    break
+                else:
+                    i=1
+                    for dep in depList:
+                        print (str(i)+" : "+dep[0]+" "+dep[1]+" -> "+dep[2])
+                        i+=1
+                    i=1
+                    number = raw_input("If you want delete a dependence enter the correct number else enter 0")
+                    if number == "0":
+                        break
+                    else:
+                        for dep in depList:
+                            if str(i) == number:
+                                application.delete_dep(dep)
+                                print("Consequence delete")
+                            i+=1
+
+
+
+
     elif 'findSuperKey' in command:
         if(len(command)) <= 1:
             print("Parameter is missing")
@@ -78,7 +97,6 @@ def execute(application,command):
             superKeyList = application.find_super_key(command[1])
             for superKey in superKeyList:
                 print(superKey)
-
     elif 'findKey' in command:
         if(len(command)) <= 1:
             print("Parameter is missing")

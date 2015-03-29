@@ -92,7 +92,7 @@ class Bdd(object):
     def respect(self, table):
         list = []
         sigma = self.get_table_funcDep(table)
-        print sigma
+        print (sigma)
         with self.conn:
             cur = self.conn.cursor()
             for df in sigma:
@@ -112,7 +112,7 @@ class Bdd(object):
     def is_useless(self,triplet):
         for df in self.funcDep():
             if triplet[0] == df[0] and triplet[2] == df[2] and equals(split_str(df[1]),split_str(triplet[1])):
-                print "this functional dependence (" + df[1] + " -> " + df[2] + ") is already in the table"
+                print ("this functional dependence (" + df[1] + " -> " + df[2] + ") is already in the table")
                 return True
         return False
 
