@@ -100,7 +100,7 @@ def minimal_dependence(triplet, functional_dependencies):
         if triplet[2] in find_consequence(sub_X,functional_dependencies):
             if len(sub_X) < len(X_mini):
                 X_mini = sub_X
-    return X_mini
+    return (triplet[0], unsplit_str(X_mini), triplet[2])
 
 #http://python.jpvweb.com/mesrecettespython/doku.php?id=parties_ensemble
 def partiesliste(seq):
@@ -170,3 +170,9 @@ def split_str(str):
     return str.split(' ')
 
 
+def unsplit_str(list):
+    str = ''
+    for i in list:
+        str += i
+        str += ' '
+    return str[:len(str)-1]
