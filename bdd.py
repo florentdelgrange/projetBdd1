@@ -155,7 +155,6 @@ class Bdd(object):
                 cur.execute("INSERT INTO FuncDep VALUES (?, ?, ?)", triplet)
             else:
                 cur.execute("SELECT name FROM sqlite_master WHERE X = ? and A = ?")
-
         conn.commit()
 
 
