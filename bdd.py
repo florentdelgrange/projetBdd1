@@ -212,7 +212,6 @@ class Bdd(object):
         :param table: the table to test
         :return: /
         """
-
         while len(self.get_logical_consequence(table)) > 0:
             self.delete_dep(self.get_logical_consequence(table)[0])
         minimal = get_minimal_funcDep(self.get_table_funcDep(table))
@@ -240,10 +239,3 @@ class Bdd(object):
         conn.commit()
         cur.close()
         conn.close()
-
-
-
-
-
-
-
