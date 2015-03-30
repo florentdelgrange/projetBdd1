@@ -195,9 +195,15 @@ def merge2(functional_dependencies):
         if len(new_list) == 0:
             new_list.append([df])
         else:
+            boolean = False
             for list in new_list:
-                if included_in(split_str(df[1]+' '+df[2]), split_str(list[0][1] + ' ' + list[0][2])) or included_in(split_str(list[0][1] + ' ' + list[0][2]), split_str(df[1]+' '+df[2])):
-                    list.append(df)
-                else:
-                    new_list.append([df])
+                for df2 in list:
+                    if included_in(split_str(df[1]+' '+df[2]), split_str(df2[1] + ' ' + df2[2])) or included_in(split_str(df2[1] + ' ' + df2[2]), split_str(df[1]+' '+df[2])):
+                        list.append(df)
+                        boolean = True
+                        break
+                if(boolean):
+                    break
+            if not boolean :
+                new_list.append([df])
     return new_list
