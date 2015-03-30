@@ -56,6 +56,15 @@ def execute(application,command):
             x = raw_input("Enter X : ")
             a = raw_input("Enter A : ")
             application.add_dep((command[1],x,a,))
+    elif 'delDep' in command:
+        if (len(command) <= 1):
+            print("Parameter is missing")
+        else:
+            print("Dependence is like X ->A")
+            x = raw_input("Enter X : ")
+            a = raw_input("Enter A : ")
+            application.delete_dep(command[1],x,a)
+
     elif 'showAtt' in command:
         if(len(command)) <= 1:
             print("Parameter is missing")
@@ -147,12 +156,12 @@ def execute(application,command):
                 number = raw_input("Do you want delete a functional dependence ? (Enter the a number or 0 to continue")
                 while int(number) != 0:
                     application.delete_dep(respect[int(number)-1])
+                    if len(respect) - 1 <= 0:
+                        break
 
     else:
         print("Command not found")
         print("Type \'Help\' to know how use SGBD")
-
-
 
 input = raw_input("Enter the name of the database that you want use : ")
 application = Bdd(input)

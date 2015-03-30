@@ -220,13 +220,13 @@ class Bdd(object):
         cur = conn.cursor()
         cur.execute("CREATE TABLE FuncDep(name TEXT, X TEXT, A TEXT )")
         i = 1
-        att = []
+        attribut = []
         tableAtt = []
         for listDep in minimal:
             requestStr = ""
             for dep in listDep:
-                att = union(att,split_str(dep[1]+' '+dep[2]))
                 tableAtt = union(tableAtt,split_str(dep[1]+' '+dep[2]))
+                attribut = union(attribut,tableAtt)
                 triplet = ("table"+`i`,dep[1],dep[2])
                 cur.execute("INSERT INTO FuncDep VALUES (?, ?, ?)", triplet)
             requestStr = "CREATE TABLE table"+`i`+"("
@@ -236,13 +236,14 @@ class Bdd(object):
             cur.execute(requestStr)
             i+=1
             tableAtt = []
-
-        if not equals(att,self.get_attributes(table)):
+        if not equals(attribut,self.get_attributes(table)):
             key = self.find_key(table)
             str = "CREATE TABLE keyTable("
-            for att in key[0]:
-                str+=(att+" TEXT,")
+            for att2 in key[0]:
+                str+=(att2+" TEXT,")
             str = str[:len(str)-1]+")"
+            cur.execute(str)
+
 
         conn.commit()
         cur.close()
