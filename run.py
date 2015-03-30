@@ -62,7 +62,8 @@ def execute(application,command):
         else :
             attList = application.get_attributes(command[1])
             for att in attList:
-                print (att)
+                print (att),
+            print("\n")
     elif 'showLogCons' in command:
         if(len(command)) <= 1:
             print("Parameter is missing")
@@ -136,7 +137,7 @@ def execute(application,command):
         else :
             respect = application.respect(command[1])
             if len(respect) == 0:
-                print("All the dependence are respected")
+                print("All the dependencies are respected")
             else:
                 print("Som dependence are not respected")
                 i=1
