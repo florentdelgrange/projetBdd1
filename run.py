@@ -128,7 +128,7 @@ def execute(application,command):
                 else:
                     print("The functional dependencies are not respected")
             else:
-                print(application.respect(command[1]))
+                print(application.is_3NF(command[1]))
 
     elif 'respect' in command:
         if(len(command)) <= 1:
