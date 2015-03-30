@@ -213,11 +213,8 @@ class Bdd(object):
         :return: /
         """
         if len(self.respect(table)) <= 0 :
-            cons = self.get_logical_consequence(table)
-
-            while len(cons) > 0:
-                self.delete_dep(cons[0])
-                cons = self.get_logical_consequence(table)
+            while len(self.get_logical_consequence(table)) > 0:
+                self.delete_dep(self.get_logical_consequence(table)[0])
             minimal = get_minimal_funcDep(self.get_table_funcDep(table))
             conn = lite.connect(minimal[0][0]+"decomposition.db")
             minimal = merge(minimal,[])
@@ -235,9 +232,3 @@ class Bdd(object):
             conn.close()
         else:
             print("The table don't respect de functional dependencies")
-
-
-
-
-
-
