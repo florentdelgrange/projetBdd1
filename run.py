@@ -116,11 +116,19 @@ def execute(application,command):
         if(len(command)) <= 1:
             print("Parameter is missing")
         else :
-            print(application.is_3NF(command[1]))
-            input = raw_input("Do you want to make decomposition in 3NF")
-            if "o" in input or "O" in input:
-                application.decompose(command[1])
-                print("Decomposition finished")
+            if(not application.is_3NF(command[1])):
+                respect = application.respect(command[1])
+                if len(respect) == 0:
+                    print(application.is_3NF(command[1]))
+                    input = raw_input("Do you want to make decomposition in 3NF (y/n) ")
+                    if "y" in input or "Y" in input:
+                        application.decompose(command[1])
+                        print("Decomposition finished")
+
+                else:
+                    print("The functional dependencies are not respected")
+            else:
+                print(application.respect(command[1]))
 
     elif 'respect' in command:
         if(len(command)) <= 1:

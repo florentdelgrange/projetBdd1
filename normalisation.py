@@ -172,18 +172,20 @@ def unsplit_str(list):
 
 
 def merge(list,newList):
-    placed = False
+    placed = True
     for dep in list:
         if len(newList) <= 0:
             newList.append([dep])
         else:
-            for list in newList:
-                if(equals(split_str(list[0][1]+list[0][2]),split_str(dep[1]+dep[2]))):
-                    list.append(dep)
-                    placed = True
+            for l in newList:
+                for dep2 in l:
+                    if(not(included_in(split_str(dep[1]+dep[2]),split_str(dep2[1]+dep2[2])) and included_in(split_str(dep2[1]+dep2[2]),split_str(dep[1]+dep[2])))):
+                        placed = False
+                        break
+                if(placed):
+                    l.append(dep)
             if(not placed):
                 newList.append([dep])
-            placed = False
     return newList
 
 
