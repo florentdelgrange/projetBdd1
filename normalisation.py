@@ -170,25 +170,6 @@ def unsplit_str(list):
         str += ' '
     return str[:len(str)-1]
 
-
-def merge(list):
-    newList = [[]]
-    placed = True
-    for dep in list:
-        if len(newList[0]) <= 0:
-            newList.append([dep])
-        else:
-            for l in newList:
-                for dep2 in l:
-                    if(not(included_in(split_str(dep[1]+" "+dep[2]),split_str(dep2[1]+" "+dep2[2])) or included_in(split_str(dep2[1]+" "+dep2[2]),split_str(dep[1]+" "+dep[2])))):
-                        placed = False
-                        break
-                if(placed):
-                    l.append(dep)
-            if(not placed):
-                newList.append([dep])
-    return newList
-
 def merge2(functional_dependencies):
     new_list = []
     for df in functional_dependencies:

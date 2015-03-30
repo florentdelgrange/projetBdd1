@@ -216,25 +216,33 @@ class Bdd(object):
             self.delete_dep(self.get_logical_consequence(table)[0])
         minimal = get_minimal_funcDep(self.get_table_funcDep(table))
         conn = lite.connect(minimal[0][0]+"decomposition.db")
-        minimal = merge(minimal)
+        minimal = merge2(minimal)
         print(minimal)
         cur = conn.cursor()
         cur.execute("CREATE TABLE FuncDep(name TEXT, X TEXT, A TEXT )")
         i = 1
         att = []
+        tableAtt = []
         for listDep in minimal:
+            requestStr = ""
             for dep in listDep:
-                att = union(att,split_str(dep[1]+" "+dep[2]))
+                att = union(att,split_str(dep[1]+' '+dep[2]))
+                tableAtt = union(tableAtt,split_str(dep[1]+' '+dep[2]))
                 triplet = ("table"+`i`,dep[1],dep[2])
                 cur.execute("INSERT INTO FuncDep VALUES (?, ?, ?)", triplet)
+            requestStr = "CREATE TABLE table"+`i`+"("
+            for att in table:
+                requestStr+=(att+" TEXT, ")
+            requestStr+=")\""
+            cur.execute(requestStr)
             i+=1
-            """
+
         if not equals(att,self.get_attributes(table)):
             key = self.find_key(table)
-            str = "CREATE TABLE keyTable("+=key[0][0])
+            str = "CREATE TABLE keyTable("
             for att in split_str(key[0]):
-                str+=(str(att)+" Text"
-            """
+                str+=(att+" TEXT, ")
+            str+=")\""
 
         conn.commit()
         cur.close()
